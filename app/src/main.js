@@ -3,6 +3,16 @@ const path = require('path');
 const fs = require('fs');
 const http = require('http');
 const os = require('os');
+const { execFileSync } = require('child_process');
+
+// Without this, a second launch (e.g. autostart firing while a dev instance is still up) runs
+// alongside the first instead of replacing it. Both try to grab the same global hotkey via X11's
+// exclusive key grab; only the first grabber gets it, and Electron's globalShortcut.register()
+// just returns false for the loser instead of throwing — so the second instance's window sits
+// there with a dead hotkey and no error to explain why.
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+}
 
 // TEMP DIAGNOSTIC: testing whether the open/close resize flash is a GPU-compositor swapchain
 // artifact (X11/GLX briefly stretches the *old* frame's texture to the new window size before
@@ -195,11 +205,28 @@ function extractBody(payload) {
   return '';
 }
 
+// Electron's screen.getCursorScreenPoint() is unreliable on this X11/multi-monitor setup — it
+// only ever reflects real motion sporadically and then freezes on a stale point indefinitely
+// (reproduced with synthetic XTestFakeMotionEvent probes: it stops updating even though the
+// pointer demonstrably keeps moving). Querying X11 directly via XQueryPointer instead is
+// consistently accurate, so that's the source of truth here; Electron's version is only a
+// fallback for the rare case python3/libX11 aren't available.
+function currentCursorPoint() {
+  try {
+    const out = execFileSync('python3', [path.join(__dirname, 'query-cursor.py')], { encoding: 'utf8' });
+    const [x, y] = out.trim().split(',').map(Number);
+    if (Number.isFinite(x) && Number.isFinite(y)) return { x, y };
+  } catch {
+    // fall through to Electron's (less reliable) tracking
+  }
+  return screen.getCursorScreenPoint();
+}
+
 // Use whichever display the cursor is actually on, not the OS's "primary" display — on a
 // multi-monitor setup those are frequently different, and docking against the wrong monitor's
 // edge is what put the widget near the seam between screens instead of a real border.
 function activeDisplay() {
-  return screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+  return screen.getDisplayNearestPoint(currentCursorPoint());
 }
 
 // The display is dynamic (whichever monitor the cursor is on), but the side is always right —
@@ -324,6 +351,12 @@ function registerHotkey() {
     // fall back silently; user can change the hotkey in settings.json
   }
 }
+
+app.on('second-instance', () => {
+  if (!win) return;
+  if (!win.isVisible()) win.show();
+  win.focus();
+});
 
 app.whenReady().then(() => {
   ensureUserData();

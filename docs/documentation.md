@@ -232,15 +232,34 @@ them straight:
 ### 3.1 Window docking and multi-monitor behavior
 
 `boundsFor(mode, display)` in `main.js` computes bounds off
-`screen.getDisplayNearestPoint(screen.getCursorScreenPoint())` — the display
-under the *cursor*, not the OS's notion of "primary," which matters a lot on
-an asymmetric multi-monitor layout. The dock side is always right (a
+`screen.getDisplayNearestPoint(currentCursorPoint())` — the display under
+the *cursor*, not the OS's notion of "primary," which matters a lot on an
+asymmetric multi-monitor layout. The dock side is always right (a
 left-follows-cursor mode was tried and reverted — made reasoning about
 placement unpredictable for no real benefit). Width/height are fixed per
 mode (`RAIL_W`×`WIDGET_H` idle, `EXPANDED_W`×`EXPANDED_H` expanded — see
 `PANEL_SCALE = 1.5` for the current sizing multiplier on the expanded panel
 specifically; the idle rail is unaffected), and x/y are recomputed to stay
 right-edge-docked and vertically centered on whichever display was resolved.
+
+`currentCursorPoint()` exists because Electron's own
+`screen.getCursorScreenPoint()` proved unreliable on this X11/multi-monitor
+setup: it would reflect real cursor motion sporadically, then freeze on a
+stale point indefinitely — reproduced deterministically with synthetic
+`XTestFakeMotionEvent` probes that kept moving the real pointer while
+Electron's reported value never changed again. Rather than chase that bug
+inside Chromium, `query-cursor.py` (a small `ctypes`/`XQueryPointer` script,
+run via `execFileSync`) is used as the source of truth instead, with
+Electron's API only as a fallback if `python3`/`libX11` aren't available.
+
+The hotkey itself depends on `app.requestSingleInstanceLock()` (top of
+`main.js`) to mean anything: X11's key grab is exclusive system-wide, so if
+a second instance is ever running alongside the first (e.g. autostart firing
+while a dev copy is still up), only whichever instance grabbed the hotkey
+first will ever see it fire — the second's `globalShortcut.register()` call
+just returns `false` silently, with no error to explain why the hotkey does
+nothing. The lock makes a second launch focus the existing window instead of
+running concurrently.
 
 **Wayland**: positioning silently doesn't work at all — not flaky, a hard
 protocol limitation (Wayland deliberately doesn't let a client set its own
@@ -477,6 +496,11 @@ npm start          # electron . --no-sandbox — sandboxed chrome-sandbox
                     # README.md for the fully-sandboxed alternative
 npm run dist        # electron-builder → AppImage + .deb under dist/
 ```
+
+Requires `python3` with `libX11` on `PATH`/loadable at runtime — used by
+`query-cursor.py` for reliable cursor-position tracking (see §3.1). Both are
+standard on any Linux desktop with an X server, so this isn't a separate
+install step in practice.
 
 No test suite exists. Verification throughout this project's development has
 been done by driving the actual running app — via Chrome DevTools Protocol
