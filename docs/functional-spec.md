@@ -1,6 +1,6 @@
 # Functional Specification — "Kinso"-style Desktop Companion (Linux reconstruction)
 
-Source material: `clip_inspo.mp4` (720×1280, 29.4s, 30fps) — a vertical promo/demo reel for a macOS
+Source material: `docs/insp/clip_inspo.mp4` (720×1280, 29.4s, 30fps) — a vertical promo/demo reel for a macOS
 menu-bar-adjacent AI desktop widget. Reference frames extracted to `docs/reference-frames/`.
 
 > **Naming/trademark note:** the source app is branded "Kinso" (visible in the demo's own inbox:

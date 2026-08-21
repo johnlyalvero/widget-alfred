@@ -1,12 +1,13 @@
-# Kinso (Linux) — personal-use reconstruction
+# Widget Alfred
 
 A Linux/Electron rebuild of the 5-mode desktop-companion widget documented in
-`../docs/functional-spec.md`. Personal-use only — see the naming note in that spec before
+`docs/functional-spec.md`. Personal-use only — see the naming note in that spec before
 sharing this with anyone else.
 
 ## Run it
 
 ```bash
+cd app
 npm install
 npm start
 ```
@@ -99,9 +100,9 @@ still renders, just wherever the compositor decides to put it, and stays there.
   fine here — the app never loads remote or untrusted content, only its own local files, with
   `contextIsolation` on and `nodeIntegration` off. If you'd rather run fully sandboxed:
   ```bash
-  sudo chown root node_modules/electron/dist/chrome-sandbox
-  sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
-  npm run start:sandboxed
+  sudo chown root app/node_modules/electron/dist/chrome-sandbox
+  sudo chmod 4755 app/node_modules/electron/dist/chrome-sandbox
+  cd app && npm run start:sandboxed
   ```
 - **Always-on-top on Wayland**: GNOME's Wayland compositor (Mutter) has weaker, less consistent
   support for "stay above everything" than X11 does. The app asks for the strongest level
@@ -124,6 +125,6 @@ still renders, just wherever the compositor decides to put it, and stays there.
 
 ## Packaging (optional, for later)
 
-`npm run dist` uses `electron-builder` to produce an AppImage and a `.deb` under `dist/` — see
-`../docs/functional-spec.md` for the fuller production-readiness checklist (testing, CI, icons,
-auto-update) before you'd want to actually ship this to another machine.
+`cd app && npm run dist` uses `electron-builder` to produce an AppImage and a `.deb` under
+`app/dist/` — see `docs/functional-spec.md` for the fuller production-readiness checklist
+(testing, CI, icons, auto-update) before you'd want to actually ship this to another machine.
