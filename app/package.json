@@ -1,0 +1,37 @@
+{
+  "name": "kinso-linux",
+  "productName": "Kinso",
+  "version": "0.1.0",
+  "description": "Personal-use Linux reconstruction of a macOS desktop-companion widget (notifications, notes, calendar, inbox, AI chat).",
+  "private": true,
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron . --no-sandbox",
+    "start:sandboxed": "electron .",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "marked": "^18.0.10"
+  },
+  "devDependencies": {
+    "electron": "^43.4.1",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "local.personal.kinso-linux",
+    "productName": "Kinso",
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "data/**/*"
+    ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility",
+      "icon": "assets/icons"
+    }
+  }
+}

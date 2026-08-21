@@ -1,0 +1,918 @@
+<title>Kinso Interface Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#0a0b10;
+    --dusk-a:#2c2140;
+    --dusk-b:#5c3a55;
+    --dusk-c:#d98a5f;
+    --dusk-d:#141225;
+    --panel-glass:rgba(23,25,31,.74);
+    --rail-glass:rgba(13,14,18,.88);
+    --hairline:rgba(255,255,255,.10);
+    --hairline-soft:rgba(255,255,255,.06);
+    --text-hi:#f4f5f7;
+    --text-lo:#9aa0ac;
+    --text-faint:#666c78;
+    --accent-flag:#ff6b58;
+    --accent-live:#3dd68c;
+    --accent-doc:#e8b85c;
+    --comet-1:#8b7cf6;
+    --comet-2:#5ec8f2;
+    --page-card:#111319;
+    --page-card-b:rgba(255,255,255,.08);
+
+    --f-display:"Fraunces", ui-serif, Georgia, serif;
+    --f-body:"Source Sans 3", -apple-system, "Segoe UI", Ubuntu, sans-serif;
+    --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    --f-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Ubuntu, Roboto, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{background:var(--ground);}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--text-hi);
+    font-family:var(--f-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  :focus-visible{outline:2px solid var(--accent-doc); outline-offset:2px; border-radius:4px;}
+
+  .page{max-width:1180px;margin:0 auto;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.25rem,4vw,2.5rem) 4rem;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding-bottom:2rem;
+    border-bottom:1px solid var(--hairline-soft);
+    margin-bottom:2rem;
+  }
+  .eyebrow{
+    font-family:var(--f-mono);
+    font-size:.72rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--accent-doc);
+    margin:0 0 .9rem;
+  }
+  .hero h1{
+    font-family:var(--f-display);
+    font-weight:600;
+    font-size:clamp(2.2rem,5vw,3.4rem);
+    margin:0 0 .7rem;
+    text-wrap:balance;
+    letter-spacing:-.01em;
+  }
+  .dek{
+    font-size:1.05rem;
+    color:var(--text-lo);
+    max-width:62ch;
+    margin:0 0 1.6rem;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:1.75rem 2.5rem;
+    margin:0;
+    padding:1rem 0 0;
+    border-top:1px solid var(--hairline-soft);
+  }
+  .meta-row dt{
+    font-family:var(--f-mono);
+    font-size:.68rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin:0 0 .3rem;
+  }
+  .meta-row dd{
+    margin:0;
+    font-size:.92rem;
+    color:var(--text-hi);
+    font-variant-numeric:tabular-nums;
+  }
+
+  /* ---------- state rail (chips) ---------- */
+  .state-rail{
+    display:flex;
+    gap:.5rem;
+    flex-wrap:wrap;
+    margin-bottom:1.75rem;
+  }
+  .state-chip{
+    display:flex;
+    align-items:baseline;
+    gap:.5rem;
+    background:var(--page-card);
+    border:1px solid var(--page-card-b);
+    color:var(--text-lo);
+    font-family:var(--f-body);
+    font-size:.86rem;
+    font-weight:600;
+    padding:.55rem .9rem;
+    border-radius:999px;
+    cursor:pointer;
+    transition:border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .state-chip .chip-idx{
+    font-family:var(--f-mono);
+    font-size:.72rem;
+    font-weight:400;
+    color:var(--text-faint);
+  }
+  .state-chip:hover{border-color:var(--hairline); color:var(--text-hi);}
+  .state-chip.active{
+    background:var(--accent-doc);
+    color:#221a08;
+    border-color:var(--accent-doc);
+  }
+  .state-chip.active .chip-idx{color:#221a08; opacity:.6;}
+
+  /* ---------- stage layout ---------- */
+  .stage-area{
+    display:grid;
+    grid-template-columns:minmax(0,1.55fr) minmax(280px,1fr);
+    gap:1.75rem;
+    align-items:start;
+  }
+  @media (max-width:860px){
+    .stage-area{grid-template-columns:1fr;}
+  }
+
+  .stage-wrap{min-width:0;}
+  .stage{
+    position:relative;
+    width:100%;
+    aspect-ratio:16/10;
+    border-radius:18px;
+    overflow:hidden;
+    background:
+      radial-gradient(120% 90% at 78% 8%, var(--dusk-c) 0%, transparent 42%),
+      linear-gradient(165deg, var(--dusk-a) 0%, var(--dusk-b) 45%, var(--dusk-d) 100%);
+    border:1px solid var(--page-card-b);
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.7);
+  }
+  .stage::after{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(0deg, rgba(0,0,0,.28), transparent 40%);
+    pointer-events:none;
+  }
+
+  .widget-rail{
+    position:absolute;
+    top:50%;
+    right:5%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:2%;
+    padding:.6em .45em;
+    width:6.4%;
+    min-width:34px;
+    background:var(--rail-glass);
+    border:1px solid var(--hairline);
+    border-radius:999px;
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    z-index:3;
+  }
+  .rail-btn{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    aspect-ratio:1;
+    width:100%;
+    border:none;
+    border-radius:8px;
+    background:transparent;
+    color:var(--text-lo);
+    cursor:pointer;
+    padding:0;
+  }
+  .rail-btn svg{width:56%; height:56%;}
+  .rail-btn:hover{color:var(--text-hi);}
+  .rail-btn.on{background:rgba(255,255,255,.16); color:var(--text-hi);}
+  .rail-btn .dot{
+    position:absolute; top:14%; right:14%;
+    width:16%; height:16%; min-width:5px; min-height:5px;
+    background:var(--accent-flag);
+    border-radius:50%;
+    border:1.5px solid var(--rail-glass);
+  }
+
+  .widget-panel{
+    position:absolute;
+    top:8%;
+    right:calc(5% + 6.4% + 1.6%);
+    width:34%;
+    min-width:210px;
+    height:78%;
+    background:var(--panel-glass);
+    border:1px solid var(--hairline);
+    border-radius:16px;
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    z-index:2;
+    font-family:var(--f-system);
+    opacity:0;
+    transform:translateX(8px) scale(.98);
+    transition:opacity .22s ease, transform .22s ease;
+    pointer-events:none;
+  }
+  .widget-panel.show{opacity:1; transform:translateX(0) scale(1); pointer-events:auto;}
+  @media (prefers-reduced-motion:reduce){
+    .widget-panel{transition:none;}
+  }
+
+  .idle-hint{
+    position:absolute;
+    right:calc(5% + 6.4% + 1.6%);
+    top:8%;
+    width:34%;
+    min-width:210px;
+    height:78%;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    color:rgba(244,245,247,.55);
+    font-size:.78rem;
+    padding:1.5rem;
+    opacity:0;
+    transition:opacity .2s ease;
+    pointer-events:none;
+  }
+  .idle-hint.show{opacity:1;}
+
+  .stage-caption{
+    font-family:var(--f-mono);
+    font-size:.72rem;
+    color:var(--text-faint);
+    margin:.7rem 0 0;
+  }
+
+  /* ---------- panel internals ---------- */
+  .p-head{
+    display:flex; align-items:center; gap:.4em;
+    padding:.6em .7em;
+    border-bottom:1px solid var(--hairline-soft);
+    flex-shrink:0;
+  }
+  .p-head .spacer{flex:1;}
+  .p-icon-btn{
+    display:flex; align-items:center; justify-content:center;
+    width:1.9em; height:1.9em;
+    border:none; background:transparent; color:var(--text-lo);
+    border-radius:6px; cursor:pointer;
+  }
+  .p-icon-btn svg{width:60%; height:60%;}
+  .p-icon-btn:hover{background:rgba(255,255,255,.08); color:var(--text-hi);}
+  .p-title{
+    font-size:.82em; font-weight:600; color:var(--text-hi);
+    display:flex; align-items:center; gap:.4em;
+  }
+  .p-title svg{width:1em; height:1em; opacity:.7;}
+  .p-body{flex:1; overflow-y:auto; padding:.9em 1em; font-size:.86em;}
+  .p-foot{border-top:1px solid var(--hairline-soft); padding:.6em .7em; flex-shrink:0;}
+
+  /* AI mode */
+  .ai-empty-state{
+    height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:1.4em; color:var(--text-hi); text-align:center;
+  }
+  .ai-empty-state .greet{font-size:1.05em; font-weight:600;}
+  .comet{
+    width:2.6em; height:2.6em; border-radius:50%;
+    background:conic-gradient(from 200deg, var(--comet-1), var(--comet-2), var(--comet-1));
+    filter:blur(.5px);
+    animation:spin 5s linear infinite;
+    box-shadow:0 0 30px -4px var(--comet-2);
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @media (prefers-reduced-motion:reduce){ .comet{animation:none;} }
+  .ai-thread{display:flex; flex-direction:column; gap:.9em;}
+  .ai-msg-user{color:var(--text-hi); font-size:.95em;}
+  .ai-thinking{display:flex; gap:.28em;}
+  .ai-thinking span{
+    width:.4em; height:.4em; border-radius:50%; background:var(--text-lo);
+    animation:pulse 1.1s ease-in-out infinite;
+  }
+  .ai-thinking span:nth-child(2){animation-delay:.15s;}
+  .ai-thinking span:nth-child(3){animation-delay:.3s;}
+  @keyframes pulse{0%,60%,100%{opacity:.25; transform:translateY(0);} 30%{opacity:1; transform:translateY(-2px);}}
+  @media (prefers-reduced-motion:reduce){ .ai-thinking span{animation:none; opacity:.8;} }
+  .ai-inputbar{
+    display:flex; align-items:center; gap:.5em;
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--hairline);
+    border-radius:11px;
+    padding:.5em .6em;
+  }
+  .ai-inputbar input{
+    flex:1; background:transparent; border:none; outline:none;
+    color:var(--text-hi); font-family:var(--f-system); font-size:.86em;
+  }
+  .ai-inputbar input::placeholder{color:var(--text-faint);}
+  .ai-inputbar .send{
+    display:flex; align-items:center; justify-content:center;
+    width:1.9em; height:1.9em; border-radius:50%;
+    background:var(--text-hi); color:#111; border:none; cursor:pointer;
+  }
+  .ai-inputbar .send svg{width:55%; height:55%;}
+  .ai-note{font-size:.72em; color:var(--text-faint); margin-top:.6em; text-align:center;}
+
+  /* Notifications */
+  .notif-card{display:flex; flex-direction:column; height:100%;}
+  .notif-progress{height:2px; background:var(--hairline-soft); position:relative; flex-shrink:0;}
+  .notif-progress i{position:absolute; inset:0; width:calc((100% / var(--n)) * (var(--i) + 1)); background:var(--text-hi); transition:width .2s ease;}
+  .sender-row{display:flex; align-items:center; gap:.6em; margin-bottom:.7em;}
+  .sender-badge{
+    width:1.7em; height:1.7em; border-radius:7px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:.78em; font-weight:700; color:#fff;
+  }
+  .sender-name{font-weight:600; color:var(--text-hi); font-size:.92em;}
+  .sender-sub{color:var(--text-faint); font-size:.76em;}
+  .notif-body-text{color:var(--text-lo); font-size:.9em;}
+  .reply-box{
+    background:rgba(255,255,255,.05);
+    border:1px solid var(--hairline);
+    border-radius:10px;
+    padding:.55em .65em;
+  }
+  .reply-ph{color:var(--text-faint); font-size:.82em; margin-bottom:.5em;}
+  .reply-icons{display:flex; align-items:center; justify-content:space-between;}
+  .reply-icons .grp{display:flex; gap:.3em;}
+  .reply-icons svg{width:1em; height:1em; color:var(--text-faint);}
+
+  /* Notes */
+  .rec-pill{
+    display:flex; align-items:center; gap:.35em;
+    background:rgba(61,214,140,.14);
+    border:1px solid rgba(61,214,140,.35);
+    color:var(--accent-live);
+    font-size:.68em; font-weight:600;
+    padding:.25em .55em; border-radius:999px;
+  }
+  .rec-pill .rd{width:.5em; height:.5em; border-radius:50%; background:var(--accent-live); animation:blink 1.4s ease-in-out infinite;}
+  @keyframes blink{50%{opacity:.35;}}
+  @media (prefers-reduced-motion:reduce){ .rec-pill .rd{animation:none;} }
+  .notes-title{font-weight:700; color:var(--text-hi); margin-bottom:.7em; font-size:.95em;}
+  .notes-body{color:var(--text-hi); font-size:.9em; white-space:pre-wrap; min-height:4em;}
+  .notes-replay{
+    margin-top:.9em; font-family:var(--f-mono); font-size:.7em;
+    color:var(--text-lo); background:none; border:1px dashed var(--hairline);
+    padding:.4em .7em; border-radius:8px; cursor:pointer;
+  }
+  .notes-replay:hover{color:var(--text-hi); border-color:var(--text-lo);}
+
+  /* Calendar */
+  .cal-row{
+    display:flex; gap:.6em; padding:.55em .3em; cursor:pointer; border-radius:8px;
+    align-items:flex-start;
+  }
+  .cal-row:hover{background:rgba(255,255,255,.05);}
+  .cal-bar{width:3px; align-self:stretch; border-radius:2px; background:var(--comet-2); flex-shrink:0; min-height:2.2em;}
+  .cal-bar.conflict{background:var(--accent-flag);}
+  .cal-title{color:var(--text-hi); font-size:.88em; font-weight:600;}
+  .cal-title .tent{color:var(--text-faint); font-weight:400;}
+  .cal-meta{color:var(--text-faint); font-size:.76em; font-variant-numeric:tabular-nums;}
+  .cal-detail-card{font-size:.9em;}
+  .cal-detail-title{font-weight:700; font-size:1.05em; color:var(--text-hi); margin-bottom:.15em;}
+  .cal-detail-when{color:var(--text-lo); font-size:.82em; margin-bottom:.2em;}
+  .cal-detail-org{color:var(--text-faint); font-size:.78em; margin-bottom:1em;}
+  .zoom-row{
+    display:flex; align-items:center; gap:.6em; background:rgba(255,255,255,.05);
+    border:1px solid var(--hairline); border-radius:9px; padding:.55em .7em; margin-bottom:1em;
+  }
+  .zoom-row svg:first-child{width:1.1em; height:1.1em; color:#4fa8ff; flex-shrink:0;}
+  .zoom-url{flex:1; font-size:.78em; color:var(--text-lo); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .zoom-row .copy-btn{background:none; border:none; color:var(--text-faint); cursor:pointer; width:1.2em; height:1.2em; flex-shrink:0;}
+  .zoom-row .copy-btn svg{width:100%; height:100%;}
+  .invitees-label{font-size:.72em; color:var(--text-faint); text-transform:uppercase; letter-spacing:.06em; margin-bottom:.5em;}
+  .chip-row{display:flex; gap:.4em; flex-wrap:wrap;}
+  .inv-chip{
+    display:flex; align-items:center; gap:.35em;
+    background:rgba(255,255,255,.06); border-radius:999px; padding:.3em .6em .3em .3em;
+    font-size:.78em; color:var(--text-hi);
+  }
+  .inv-avatar{width:1.3em; height:1.3em; border-radius:50%; background:linear-gradient(135deg,var(--comet-1),var(--comet-2)); flex-shrink:0;}
+
+  /* Inbox */
+  .inbox-filters{display:flex; align-items:center; gap:.4em; padding:.5em .3em; border-bottom:1px solid var(--hairline-soft); margin-bottom:.4em; flex-wrap:wrap;}
+  .filter-dot{width:1.5em; height:1.5em; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.6em; font-weight:700; color:#fff; cursor:pointer; opacity:.85;}
+  .filter-dot.active{outline:2px solid rgba(255,255,255,.5); outline-offset:2px;}
+  .inbox-row{display:flex; gap:.6em; padding:.55em .3em; border-radius:8px; cursor:pointer;}
+  .inbox-row:hover{background:rgba(255,255,255,.05);}
+  .inbox-avatar{width:1.9em; height:1.9em; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,#5b6472,#33383f); display:flex; align-items:center; justify-content:center; font-size:.7em; font-weight:700; color:#fff;}
+  .inbox-main{flex:1; min-width:0;}
+  .inbox-top{display:flex; justify-content:space-between; gap:.5em;}
+  .inbox-from{font-size:.85em; font-weight:600; color:var(--text-hi); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .inbox-time{font-size:.7em; color:var(--text-faint); flex-shrink:0; font-variant-numeric:tabular-nums;}
+  .inbox-preview{font-size:.78em; color:var(--text-lo); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .inbox-row.unread .inbox-from{color:#fff;}
+  .unread-dot{width:.4em; height:.4em; border-radius:50%; background:#4fa8ff; flex-shrink:0; align-self:center;}
+
+  /* ---------- annotation column ---------- */
+  .annot{
+    background:var(--page-card);
+    border:1px solid var(--page-card-b);
+    border-radius:16px;
+    padding:1.3rem 1.4rem;
+  }
+  .annot .a-eyebrow{
+    font-family:var(--f-mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent-doc); margin:0 0 .5rem;
+  }
+  .annot h2{
+    font-family:var(--f-display); font-weight:600; font-size:1.35rem; margin:0 0 .6rem;
+    text-wrap:balance;
+  }
+  .annot .a-desc{color:var(--text-lo); font-size:.9rem; margin:0 0 1.2rem;}
+  .a-block{margin-bottom:1.1rem;}
+  .a-block:last-child{margin-bottom:0;}
+  .a-block h3{
+    font-family:var(--f-mono); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--text-faint); margin:0 0 .5rem; font-weight:500;
+  }
+  .a-block ul{margin:0; padding-left:1.1em; color:var(--text-lo); font-size:.85rem;}
+  .a-block li{margin-bottom:.35em;}
+  .a-block li:last-child{margin-bottom:0;}
+  .a-block li b{color:var(--text-hi); font-weight:600;}
+  .a-note{
+    font-size:.82rem; color:var(--text-lo);
+    border-left:2px solid var(--accent-doc);
+    padding-left:.7em;
+  }
+
+  .page-footer{
+    margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--hairline-soft);
+    color:var(--text-faint); font-size:.8rem;
+  }
+</style>
+
+<div class="page">
+  <header class="hero">
+    <p class="eyebrow">Field reconstruction · source: clip_inspo.mp4</p>
+    <h1>Kinso, redrawn</h1>
+    <p class="dek">A frame-by-frame reconstruction of a macOS desktop-companion widget — five modes distilled
+      from a 29-second demo reel, rebuilt here as a clickable reference for the Linux port. Click the rail
+      icons inside the stage, or jump to a state below.</p>
+    <dl class="meta-row">
+      <div><dt>Source clip</dt><dd>720×1280 · 30fps · 29.4s</dd></div>
+      <div><dt>Frames sampled</dt><dd>~35 of 883</dd></div>
+      <div><dt>Modes found</dt><dd>5</dd></div>
+      <div><dt>Companion doc</dt><dd>functional-spec.md</dd></div>
+    </dl>
+  </header>
+
+  <nav class="state-rail" id="chips" aria-label="Interface states"></nav>
+
+  <main class="stage-area">
+    <div class="stage-wrap">
+      <div class="stage" id="stage">
+        <div class="widget-panel" id="panel"></div>
+        <div class="idle-hint" id="idleHint">The rail is docked near the screen's right edge, collapsed<br>by default. Click an icon to expand a mode.</div>
+        <div class="widget-rail" id="rail"></div>
+      </div>
+      <p class="stage-caption">Preview stage — proportioned to the rail's real geometry, not a literal OS window.</p>
+    </div>
+
+    <aside class="annot" id="annot"></aside>
+  </main>
+
+  <footer class="page-footer">
+    <p>Reconstructed from personal reference footage for a personal-use Linux rebuild. "Kinso" and any
+      marks shown (trademark filings, build names) belong to their original owner — this study keeps the
+      name only as a working label; rename before sharing or shipping to anyone else.</p>
+  </footer>
+</div>
+
+<svg width="0" height="0" style="position:absolute">
+<defs>
+<g id="ic-sparkle"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+<g id="ic-bell"><path d="M6 10a6 6 0 1112 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" fill="none"/><path d="M10 19a2 2 0 004 0" stroke="currentColor" stroke-width="1.6" fill="none"/></g>
+<g id="ic-doc"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></g>
+<g id="ic-cal"><rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M4 9h16M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+<g id="ic-inbox"><rect x="3.5" y="5.5" width="17" height="13" rx="2" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/></g>
+<g id="ic-back"><path d="M14.5 5L8 12l6.5 7" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="ic-fwd"><path d="M9.5 5L16 12l-6.5 7" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="ic-check"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="ic-more"><circle cx="6" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="18" cy="12" r="1.5" fill="currentColor"/></g>
+<g id="ic-history"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></g>
+<g id="ic-close"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></g>
+<g id="ic-pencil"><path d="M4 20l1-4L16 5l3 3L8 19l-4 1z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/></g>
+<g id="ic-trash"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/></g>
+<g id="ic-ext"><path d="M9 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-3M14 4h6v6M20 4l-9 9" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="ic-clip"><path d="M8 12l6-6a3 3 0 114 4l-8 8a5 5 0 01-7-7l7-7" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>
+<g id="ic-mic"><rect x="9" y="3" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M6 11a6 6 0 0012 0M12 19v2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>
+<g id="ic-send"><path d="M12 18V6M7 11l5-5 5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="ic-plus"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></g>
+<g id="ic-cmd"><path d="M9 4a2.5 2.5 0 00-2.5 2.5V9M9 20a2.5 2.5 0 01-2.5-2.5V15M15 4a2.5 2.5 0 012.5 2.5V9M15 20a2.5 2.5 0 002.5-2.5V15M6.5 9h11v6h-11z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/></g>
+<g id="ic-copy"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M5 15V6a2 2 0 012-2h9" stroke="currentColor" stroke-width="1.5" fill="none"/></g>
+<g id="ic-wand"><path d="M4 20L16 8M13 5l1 2 2 1-2 1-1 2-1-2-2-1 2-1z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/></g>
+<g id="ic-expand"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="ic-video"><rect x="3" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M15 10l6-3v10l-6-3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/></g>
+</defs>
+</svg>
+
+<script>
+const ic = (id, cls='') => `<svg class="${cls}" viewBox="0 0 24 24"><use href="#${id}"/></svg>`;
+
+const NOTIFS = [
+  {badge:'M', color:'#e0533d', name:'Frank Greeff', sub:'Invitation: Frank Gmail Testing · Thu 11 Jun 2026',
+   body:'You have been invited to the following event. Frank Gmail Testing — Thursday 11 Jun 2026 · 3:30pm–4pm (AEST)'},
+  {badge:'G', color:'#4285f4', name:'Google', sub:'Your verification code is 847293',
+   body:'Use this code to complete your sign-in. This code expires in 10 minutes…'},
+  {badge:'H', color:'#3a6df0', name:'Henrik Saar', sub:'Q2 board pack — feedback by Friday',
+   body:"I've dropped the latest board pack in SharePoint. The exec summary is on slide 3 — would love your read by Friday EOD…"},
+  {badge:'S', color:'#c25bd6', name:'Sarah Chen', sub:'Partnership Follow-up',
+   body:'Hi Florian, great connecting at TechCrunch Disrupt! Would love to find time next week to continue our conversation about the integration…'},
+];
+
+const CAL = [
+  {t:'Frank x Tahlia', time:'8:00 am', dur:'30 min', conflict:false, detail:{
+    when:'Monday 17 August · 8:00–8:30 AM', org:'you',
+    zoom:'zoom.us/j/frank-tahlia-sync', invitees:[{n:'You'},{n:'Tahlia'},{n:'Florian Mitchell'}], awaiting:'1 awaiting'}},
+  {t:'Phase 2 Ideation', time:'8:30 am', dur:'1 h', conflict:true, detail:{
+    when:'Monday 17 August · 8:30–9:30 AM', org:'you', zoom:'zoom.us/j/phase2-ideation', invitees:[{n:'You'}], awaiting:null}},
+  {t:'Customer call — Initech', time:'8:30 am', dur:'30 min', conflict:true, detail:{
+    when:'Monday 17 August · 8:30–9:00 AM', org:'you', zoom:'zoom.us/j/initech-call', invitees:[{n:'You'}], awaiting:null}},
+  {t:'Board prep', time:'9:00 am', dur:'15 min', conflict:false, detail:{
+    when:'Monday 17 August · 9:00–9:15 AM', org:'you', zoom:'zoom.us/j/board-prep', invitees:[{n:'You'}], awaiting:null}},
+  {t:'Board Meeting', time:'9:00 am', dur:'1 h', conflict:true, detail:{
+    when:'Monday 17 August · 9:00–10:00 AM', org:'you', zoom:'zoom.us/j/board-meeting', invitees:[{n:'You'}], awaiting:null}},
+  {t:'Team Standup', time:'10:00 am', dur:'30 min', conflict:false, detail:{
+    when:'Monday 17 August · 10:00–10:30 AM', org:'you', zoom:'zoom.us/j/team-standup', invitees:[{n:'You'}], awaiting:null}},
+  {t:'Coffee with Investor', tentative:true, time:'11:00 am', dur:'30 min', conflict:false, detail:{
+    when:'Monday 17 August · 11:00–11:30 AM (tentative)', org:'you', zoom:null, invitees:[{n:'You'}], awaiting:null}},
+  {t:'Client Call - TechCorp', time:'', dur:'', conflict:false, detail:{
+    when:'Monday 17 August', org:'you', zoom:'zoom.us/j/techcorp-call', invitees:[{n:'You'}], awaiting:null}},
+];
+
+const INBOX = [
+  {av:'FG', c:'#e0533d', from:'Frank Greeff', sub:'Invitation: Frank Gmail Testing @ Thu 11 Jun 2026 3…', time:'10:08 am', unread:true},
+  {av:'G', c:'#4285f4', from:'Google', sub:'Your verification code is 847293: Use this…', time:'10:08 am', unread:false},
+  {av:'VH', c:'#c25bd6', from:'Violet Hayes', sub:'Lunch Plans: Anyone free for lunch tomorr…', time:'10:08 am', unread:false},
+  {av:'DS', c:'#5b6472', from:'David, Sarah, me', sub:'Partnership Follow-up: Hi Florian, great co…', time:'10:06 am', unread:false},
+  {av:'JT', c:'#3a6df0', from:'Jacques, Tony, me', sub:'U.S. Trademark Application - KINSO Filed:…', time:'10:00 am', unread:false},
+  {av:'JC', c:'#3dd68c', from:'Jack Callaghan', sub:'Lunch Tomorrow?: Can we do 2pm at Lati…', time:'9:56 am', unread:false},
+  {av:'K', c:'#8b7cf6', from:'Kinso via TestFlight', sub:'Kinso build 1.4.2 is ready to test: A new bu…', time:'9:56 am', unread:true},
+];
+
+const FILTERS = ['all','#e0533d','#4285f4','#25d366','#c25bd6','#3a6df0','#8b7cf6'];
+
+let mode = 'idle';       // idle | ai | notif | notes | cal | inbox
+let notifIndex = 0;
+let calView = 'list';
+let calIndex = 0;
+let aiTurn = 'empty';    // empty | sent
+let aiQueryText = 'Where is that contract from last week?';
+let notesRevealed = false;
+let filterActive = 0;
+
+const STATES = [
+  {id:'idle', idx:'00', label:'Idle rail', apply:()=>{mode='idle';}},
+  {id:'ai-empty', idx:'01', label:'Ask Kinso', apply:()=>{mode='ai'; aiTurn='empty';}},
+  {id:'ai-query', idx:'02', label:'Kinso thinking', apply:()=>{mode='ai'; aiTurn='sent';}},
+  {id:'notif', idx:'03', label:'Notifications', apply:()=>{mode='notif'; notifIndex=0;}},
+  {id:'notes', idx:'04', label:'Meeting notes', apply:()=>{mode='notes'; notesRevealed=false;}},
+  {id:'cal-list', idx:'05', label:'Calendar', apply:()=>{mode='cal'; calView='list';}},
+  {id:'cal-detail', idx:'06', label:'Event detail', apply:()=>{mode='cal'; calView='detail'; calIndex=0;}},
+  {id:'inbox', idx:'07', label:'Unified inbox', apply:()=>{mode='inbox';}},
+];
+
+const ANNOT = {
+  idle: {title:'Idle — rail only', desc:'Default resting state. Only the icon rail is visible, docked with a visible gap from the true screen edge, roughly vertically centered. No panel, no dimming — everything underneath stays fully interactive.',
+    blocks:[
+      {h:'Header controls', items:['None — rail has no chrome of its own']},
+      {h:'Behavior', items:['Click any icon to expand its panel','Click the active icon again to collapse back to idle']},
+    ], note:'Exact global summon gesture (hotkey / tray click) is not shown in the clip — treated as an assumption in the spec.'},
+  'ai-empty': {title:'Ask Kinso — empty state', desc:'Time-aware greeting plus an idle animated mark; nothing else rendered until the user types.',
+    blocks:[
+      {h:'Header controls', items:['<b>‹</b> back to idle','<b>edit</b> new thread','<b>history</b> past conversations'] },
+      {h:'Sample copy', items:['<b>"Good morning, {FirstName}"</b> — swap to afternoon/evening by local clock']},
+      {h:'Input bar', items:['<b>+</b> attach context','<b>⌘</b> command hint','mic','send']},
+    ]},
+  'ai-query': {title:'Ask Kinso — awaiting response', desc:'User message renders top-left; a "···" indicator plays while a response streams in.',
+    blocks:[
+      {h:'Captured query', items:['<b>"Where is that contract from last week?"</b> — implies answers are grounded in the user’s own connected mail/docs, not generic chat']},
+    ], note:'The source clip cuts here — response layout and streaming behavior are unobserved, so this mockup intentionally stops at the thinking indicator rather than inventing an answer.'},
+  notif: {title:'Priority Notifications', desc:'A single-card deck, one notification at a time, cycled like a story stack.',
+    blocks:[
+      {h:'Header controls', items:['<b>‹ ✓ … ›</b> — back / mark-done / overflow / next','<b>history</b>, <b>close</b> on the right'] },
+      {h:'Card anatomy', items:['Sender badge + name + subject','2–3 line body preview','Reply composer: Aa · @ · clip, then emoji · mic · send']},
+      {h:'Captured cards', items:['Frank Greeff — calendar invite','Google — sign-in code','Henrik Saar — board pack','Sarah Chen — conference follow-up']},
+    ], note:'Exact semantics of ✓ (archive vs. snooze vs. read) is inferred from icon convention, not confirmed on-screen.'},
+  notes: {title:'Notes / Meeting Transcription', desc:'A per-meeting note that fills in progressively while a call is live — the one mode the source actually shows mid-animation.',
+    blocks:[
+      {h:'Header controls', items:['doc title chip','<b>expand</b> and <b>wand</b> (AI clean-up)','<b>external-link</b>','live-recording pill (green dot + waveform)']},
+      {h:'Captured content', items:['Title: "Frank x Jacques Meeting"','Bullets appear character-by-character: "Update Widget Designs", "Team meeting on Wednesday…"']},
+    ], note:'Use the replay button to re-run the capture animation.'},
+  'cal-list': {title:'Calendar — Today', desc:'Vertical list of the day’s events; a colored left bar flags each row, red where two events overlap in time.',
+    blocks:[
+      {h:'Header', items:['<b>‹ Today ›</b> day navigation']},
+      {h:'Captured day', items:['8 events, incl. two overlapping pairs (Phase 2 Ideation / Initech call, and Board prep / Board Meeting)']},
+    ], note:'Red = time-conflict, inferred from the overlapping timestamps — no legend is shown on-screen.'},
+  'cal-detail': {title:'Calendar — event detail', desc:'Tapping a row swaps the list for a full event card in place.',
+    blocks:[
+      {h:'Header', items:['<b>pencil</b> edit · <b>trash</b> delete · <b>close</b>']},
+      {h:'Card fields', items:['Title, full date/time range, organizer','"Join with Zoom" row with copy-to-clipboard','Invitees with status chips + "N awaiting"']},
+    ], note:'Only the "Frank x Tahlia" card reflects literally observed content; other rows here use minimal synthetic detail in the same structure.'},
+  inbox: {title:'Unified Inbox', desc:'A flat, merged, read-first feed across every connected account — not a full mail client.',
+    blocks:[
+      {h:'Header', items:['Row of account-filter dots (click to filter) + compose']},
+      {h:'Row anatomy', items:['Avatar, sender(s), subject + preview, timestamp, unread dot']},
+      {h:'Captured rows', items:['7 rows across 5+ senders, incl. the app’s own "Kinso via TestFlight" build notice']},
+    ], note:'Destination of tapping a row is not shown — most likely opens the Notifications-style card view.'},
+};
+
+function renderChips(){
+  const el = document.getElementById('chips');
+  el.innerHTML = STATES.map(s => `<button class="state-chip" data-id="${s.id}"><span class="chip-idx">${s.idx}</span>${s.label}</button>`).join('');
+  el.querySelectorAll('.state-chip').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const s = STATES.find(x=>x.id===btn.dataset.id);
+      s.apply();
+      renderAll();
+    });
+  });
+}
+
+function currentStateId(){
+  if(mode==='idle') return 'idle';
+  if(mode==='ai') return aiTurn==='sent' ? 'ai-query' : 'ai-empty';
+  if(mode==='notif') return 'notif';
+  if(mode==='notes') return 'notes';
+  if(mode==='cal') return calView==='detail' ? 'cal-detail' : 'cal-list';
+  if(mode==='inbox') return 'inbox';
+}
+
+function renderRail(){
+  const items = [
+    {m:'ai', ic:'ic-sparkle'},
+    {m:'notif', ic:'ic-bell', dot:true},
+    {m:'notes', ic:'ic-doc'},
+    {m:'cal', ic:'ic-cal'},
+    {m:'inbox', ic:'ic-inbox'},
+  ];
+  document.getElementById('rail').innerHTML = items.map(it=>`
+    <button class="rail-btn ${mode===it.m?'on':''}" data-m="${it.m}">
+      ${ic(it.ic)}${it.dot?'<span class="dot"></span>':''}
+    </button>`).join('');
+  document.querySelectorAll('.rail-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const m = btn.dataset.m;
+      if(mode===m){ mode='idle'; }
+      else{
+        mode=m;
+        if(m==='ai') aiTurn='empty';
+        if(m==='notif') notifIndex=0;
+        if(m==='cal') calView='list';
+        if(m==='notes') notesRevealed=false;
+      }
+      renderAll();
+    });
+  });
+}
+
+function panelHeader(inner){
+  return `<div class="p-head">${inner}</div>`;
+}
+
+function renderAIPanel(){
+  let body='';
+  if(aiTurn==='empty'){
+    body = `<div class="ai-empty-state"><div class="comet"></div><div class="greet">Good morning, Florian</div></div>`;
+  } else {
+    body = `<div class="ai-thread">
+      <div class="ai-msg-user">${aiQueryText}</div>
+      <div class="ai-thinking"><span></span><span></span><span></span></div>
+    </div>`;
+  }
+  return `
+    ${panelHeader(`${ic('ic-back','')}<div class="spacer"></div>
+      <button class="p-icon-btn">${ic('ic-pencil')}</button>
+      <button class="p-icon-btn">${ic('ic-history')}</button>`)}
+    <div class="p-body">${body}</div>
+    <div class="p-foot">
+      <div class="ai-inputbar">
+        <button class="p-icon-btn">${ic('ic-plus')}</button>
+        <input id="aiInput" placeholder="Ask Kinso" ${aiTurn==='sent'?'disabled':''}/>
+        <button class="p-icon-btn">${ic('ic-cmd')}</button>
+        <button class="p-icon-btn">${ic('ic-mic')}</button>
+        <button class="send" id="aiSend">${ic('ic-send')}</button>
+      </div>
+    </div>`;
+}
+
+function renderNotifPanel(){
+  const n = NOTIFS[notifIndex];
+  return `
+    ${panelHeader(`
+      <button class="p-icon-btn">${ic('ic-back')}</button>
+      <button class="p-icon-btn" id="notifCheck">${ic('ic-check')}</button>
+      <button class="p-icon-btn">${ic('ic-more')}</button>
+      <button class="p-icon-btn" id="notifNext">${ic('ic-fwd')}</button>
+      <div class="spacer"></div>
+      <button class="p-icon-btn">${ic('ic-history')}</button>
+      <button class="p-icon-btn">${ic('ic-close')}</button>
+    `)}
+    <div class="notif-progress" style="--n:${NOTIFS.length}; --i:${notifIndex}"><i></i></div>
+    <div class="p-body">
+      <div class="sender-row">
+        <div class="sender-badge" style="background:${n.color}">${n.badge}</div>
+        <div><div class="sender-name">${n.name}</div><div class="sender-sub">${n.sub}</div></div>
+      </div>
+      <div class="notif-body-text">${n.body}</div>
+    </div>
+    <div class="p-foot">
+      <div class="reply-box">
+        <div class="reply-ph">Start typing</div>
+        <div class="reply-icons">
+          <div class="grp">${ic('ic-cmd')}<span style="color:var(--text-faint);font-size:.75em;">Aa</span>${ic('ic-clip')}</div>
+          <div class="grp">${ic('ic-mic')}<span class="send" style="width:1.6em;height:1.6em;">${ic('ic-send')}</span></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderNotesPanel(){
+  const full = "- Update Widget Designs\n- Team meeting on Wednesday";
+  return `
+    ${panelHeader(`
+      <button class="p-icon-btn">${ic('ic-back')}</button>
+      <div class="p-title">${ic('ic-doc')} My notes</div>
+      <div class="spacer"></div>
+      <button class="p-icon-btn">${ic('ic-expand')}</button>
+      <button class="p-icon-btn">${ic('ic-wand')}</button>
+      <button class="p-icon-btn">${ic('ic-ext')}</button>
+      <span class="rec-pill"><span class="rd"></span>REC</span>
+    `)}
+    <div class="p-body">
+      <div class="notes-title">Frank x Jacques Meeting</div>
+      <div class="notes-body" id="notesBody">${notesRevealed?full:''}</div>
+      <button class="notes-replay" id="notesReplay">▶ replay transcription</button>
+    </div>`;
+}
+
+function renderCalPanel(){
+  if(calView==='list'){
+    const rows = CAL.map((e,i)=>`
+      <div class="cal-row" data-i="${i}">
+        <div class="cal-bar ${e.conflict?'conflict':''}"></div>
+        <div>
+          <div class="cal-title">${e.tentative?'<span class="tent">Tentative: </span>':''}${e.t}</div>
+          <div class="cal-meta">${e.time?`${e.time} · ${e.dur}`:'&nbsp;'}</div>
+        </div>
+      </div>`).join('');
+    return `
+      ${panelHeader(`<button class="p-icon-btn">${ic('ic-back')}</button><button class="p-icon-btn">${ic('ic-fwd')}</button>
+        <div class="p-title" style="margin-left:.3em;">Today</div>`)}
+      <div class="p-body">${rows}</div>`;
+  }
+  const e = CAL[calIndex];
+  const d = e.detail;
+  return `
+    ${panelHeader(`
+      <button class="p-icon-btn" id="calBack">${ic('ic-back')}</button>
+      <div class="spacer"></div>
+      <button class="p-icon-btn">${ic('ic-pencil')}</button>
+      <button class="p-icon-btn">${ic('ic-trash')}</button>
+      <button class="p-icon-btn" id="calClose">${ic('ic-close')}</button>
+    `)}
+    <div class="p-body cal-detail-card">
+      <div class="cal-detail-title">${e.t}</div>
+      <div class="cal-detail-when">${d.when}</div>
+      <div class="cal-detail-org">Organized by ${d.org}</div>
+      ${d.zoom ? `<div class="zoom-row">${ic('ic-video')}<div class="zoom-url">${d.zoom}</div><button class="copy-btn">${ic('ic-copy')}</button></div>` : ''}
+      <div class="invitees-label">Invitees ${d.awaiting?`· ${d.awaiting}`:''}</div>
+      <div class="chip-row">${d.invitees.map(v=>`<span class="inv-chip"><span class="inv-avatar"></span>${v.n}</span>`).join('')}</div>
+    </div>`;
+}
+
+function renderInboxPanel(){
+  const rows = INBOX.map((r,i)=>`
+    <div class="inbox-row ${r.unread?'unread':''}">
+      <div class="inbox-avatar" style="background:${r.c}">${r.av}</div>
+      <div class="inbox-main">
+        <div class="inbox-top"><span class="inbox-from">${r.from}</span><span class="inbox-time">${r.time}</span></div>
+        <div class="inbox-preview">${r.sub}</div>
+      </div>
+      ${r.unread?'<span class="unread-dot"></span>':''}
+    </div>`).join('');
+  return `
+    ${panelHeader(`<button class="p-icon-btn">${ic('ic-back')}</button><div class="spacer"></div><button class="p-icon-btn">${ic('ic-pencil')}</button>`)}
+    <div class="p-body" style="padding-top:.3em;">
+      <div class="inbox-filters">
+        ${FILTERS.map((c,i)=>`<div class="filter-dot ${filterActive===i?'active':''}" data-i="${i}" style="background:${c==='all'?'#4a4f58':c}">${c==='all'?ic('ic-inbox'):''}</div>`).join('')}
+      </div>
+      ${rows}
+    </div>`;
+}
+
+function wireDynamic(){
+  if(mode==='ai'){
+    const send = document.getElementById('aiSend');
+    const input = document.getElementById('aiInput');
+    if(send) send.addEventListener('click', ()=>{
+      if(aiTurn==='empty'){
+        if(input && input.value.trim()) aiQueryText = input.value.trim();
+        aiTurn='sent';
+        renderAll();
+      }
+    });
+    if(input) input.addEventListener('keydown', e=>{ if(e.key==='Enter') send.click(); });
+  }
+  if(mode==='notif'){
+    const next = ()=>{ notifIndex = (notifIndex+1) % NOTIFS.length; renderAll(); };
+    document.getElementById('notifNext').addEventListener('click', next);
+    document.getElementById('notifCheck').addEventListener('click', next);
+  }
+  if(mode==='notes'){
+    document.getElementById('notesReplay').addEventListener('click', ()=>{
+      const full = "- Update Widget Designs\n- Team meeting on Wednesday";
+      const target = document.getElementById('notesBody');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(reduce){ target.textContent = full; notesRevealed = true; return; }
+      target.textContent='';
+      let i=0;
+      const t = setInterval(()=>{
+        target.textContent = full.slice(0,i);
+        i++;
+        if(i>full.length){ clearInterval(t); notesRevealed=true; }
+      }, 28);
+    });
+  }
+  if(mode==='cal'){
+    if(calView==='list'){
+      document.querySelectorAll('.cal-row').forEach(row=>{
+        row.addEventListener('click', ()=>{ calIndex = Number(row.dataset.i); calView='detail'; renderAll(); });
+      });
+    } else {
+      document.getElementById('calBack').addEventListener('click', ()=>{ calView='list'; renderAll(); });
+      document.getElementById('calClose').addEventListener('click', ()=>{ calView='list'; renderAll(); });
+    }
+  }
+  if(mode==='inbox'){
+    document.querySelectorAll('.filter-dot').forEach(d=>{
+      d.addEventListener('click', ()=>{ filterActive = Number(d.dataset.i); renderAll(); });
+    });
+  }
+}
+
+function renderPanel(){
+  const panel = document.getElementById('panel');
+  const hint = document.getElementById('idleHint');
+  if(mode==='idle'){
+    panel.classList.remove('show');
+    hint.classList.add('show');
+    panel.innerHTML='';
+    return;
+  }
+  hint.classList.remove('show');
+  let html='';
+  if(mode==='ai') html = renderAIPanel();
+  else if(mode==='notif') html = renderNotifPanel();
+  else if(mode==='notes') html = renderNotesPanel();
+  else if(mode==='cal') html = renderCalPanel();
+  else if(mode==='inbox') html = renderInboxPanel();
+  panel.innerHTML = html;
+  panel.classList.add('show');
+  wireDynamic();
+}
+
+function renderAnnot(){
+  const key = currentStateId();
+  const a = ANNOT[key];
+  const stateMeta = STATES.find(s=>s.id===key);
+  document.getElementById('annot').innerHTML = `
+    <p class="a-eyebrow">State ${stateMeta.idx}</p>
+    <h2>${a.title}</h2>
+    <p class="a-desc">${a.desc}</p>
+    ${a.blocks.map(b=>`<div class="a-block"><h3>${b.h}</h3><ul>${b.items.map(it=>`<li>${it}</li>`).join('')}</ul></div>`).join('')}
+    ${a.note?`<div class="a-block"><p class="a-note">${a.note}</p></div>`:''}
+  `;
+}
+
+function renderChipActive(){
+  const key = currentStateId();
+  document.querySelectorAll('.state-chip').forEach(c=>c.classList.toggle('active', c.dataset.id===key));
+}
+
+function renderAll(){
+  renderRail();
+  renderPanel();
+  renderAnnot();
+  renderChipActive();
+}
+
+renderChips();
+renderAll();
+</script>

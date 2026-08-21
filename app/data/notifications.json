@@ -1,0 +1,38 @@
+[
+  {
+    "id": "n1",
+    "badge": "M",
+    "color": "#e0533d",
+    "name": "Frank Greeff",
+    "sub": "Invitation: Frank Gmail Testing · Thu 11 Jun 2026",
+    "body": "You have been invited to the following event. Frank Gmail Testing — Thursday 11 Jun 2026 · 3:30pm–4pm (AEST)",
+    "archived": false
+  },
+  {
+    "id": "n2",
+    "badge": "G",
+    "color": "#4285f4",
+    "name": "Google",
+    "sub": "Your verification code is 847293",
+    "body": "Use this code to complete your sign-in. This code expires in 10 minutes.",
+    "archived": false
+  },
+  {
+    "id": "n3",
+    "badge": "H",
+    "color": "#3a6df0",
+    "name": "Henrik Saar",
+    "sub": "Q2 board pack — feedback by Friday",
+    "body": "I've dropped the latest board pack in SharePoint. The exec summary is on slide 3 — would love your read by Friday EOD.",
+    "archived": false
+  },
+  {
+    "id": "n4",
+    "badge": "S",
+    "color": "#c25bd6",
+    "name": "Sarah Chen",
+    "sub": "Partnership Follow-up",
+    "body": "Hi there, great connecting at TechCrunch Disrupt! Would love to find time next week to continue our conversation about the integration.",
+    "archived": false
+  }
+]

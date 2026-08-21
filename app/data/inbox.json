@@ -1,0 +1,9 @@
+[
+  { "id": "i1", "av": "FG", "color": "#e0533d", "account": "#e0533d", "from": "Frank Greeff", "sub": "Invitation: Frank Gmail Testing @ Thu 11 Jun 2026 3pm", "time": "10:08 am", "unread": true },
+  { "id": "i2", "av": "G", "color": "#4285f4", "account": "#4285f4", "from": "Google", "sub": "Your verification code is 847293: use this to sign in", "time": "10:08 am", "unread": false },
+  { "id": "i3", "av": "VH", "color": "#c25bd6", "account": "#c25bd6", "from": "Violet Hayes", "sub": "Lunch Plans: Anyone free for lunch tomorrow?", "time": "10:08 am", "unread": false },
+  { "id": "i4", "av": "DS", "color": "#5b6472", "account": "#3a6df0", "from": "David, Sarah, me", "sub": "Partnership Follow-up: great connecting at the conference", "time": "10:06 am", "unread": false },
+  { "id": "i5", "av": "JT", "color": "#3a6df0", "account": "#3a6df0", "from": "Jacques, Tony, me", "sub": "Trademark Application Filed: confirmation attached", "time": "10:00 am", "unread": false },
+  { "id": "i6", "av": "JC", "color": "#3dd68c", "account": "#25d366", "from": "Jack Callaghan", "sub": "Lunch Tomorrow?: can we do 2pm at that new place", "time": "9:56 am", "unread": false },
+  { "id": "i7", "av": "K", "color": "#8b7cf6", "account": "#8b7cf6", "from": "Kinso via TestFlight", "sub": "Build 1.4.2 is ready to test: new bug fixes and polish", "time": "9:56 am", "unread": true }
+]
