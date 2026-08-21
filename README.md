@@ -1,5 +1,7 @@
 # Widget Alfred
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A Linux/Electron rebuild of the 5-mode desktop-companion widget documented in
 `docs/functional-spec.md`. Personal-use only — see the naming note in that spec before
 sharing this with anyone else.
