@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "Personal-use Linux reconstruction of a macOS desktop-companion widget (notifications, notes, calendar, inbox, AI chat).",
   "private": true,
+  "license": "MIT",
   "main": "src/main.js",
   "scripts": {
     "start": "electron . --no-sandbox",
