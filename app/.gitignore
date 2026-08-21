@@ -2,3 +2,12 @@ node_modules/
 dist/
 scratch/
 *.log
+
+# credentials / secrets — never commit real settings or keys
+settings.json
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.json

@@ -1,1 +1,9 @@
 .claude/
+
+# credentials / secrets — never commit real settings or keys
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.json
